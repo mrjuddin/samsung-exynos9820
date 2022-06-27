@@ -4,7 +4,7 @@ on: [push]
 
 env:
   TOOLCHAIN: cruel
-  INSTALLER: yes
+  INSTALLER: no
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        model: [ "G970F,G973F,G975F", "N970F,N975F" ]
+        model: [ "G970F" ]
 
     steps:
       - uses: actions/checkout@v2
@@ -54,11 +54,18 @@ jobs:
         run: |
           set -e -o pipefail
           ./cruelbuild config                    \
+                       os_patch_level=2022-05    \
                        model=${{ matrix.model }} \
-                       name="Cruel-devel"        \
+                       name="j4m_HVE1_50hz"      \
                        toolchain=$TOOLCHAIN      \
-                       +magisk                   \
+                       +magisk=v24.3             \
+                       +50hz                     \
                        +nohardening              \
+                       +tcp_westwood             \
+                       +noaudit                  \
+                       +nodebug                  \
+                       +nomodules                \
+                       +fake_config              \
                        +ttl                      \
                        +wireguard                \
                        +cifs                     \
